@@ -47,12 +47,46 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
-        [HttpPost("UpdateCustomer")]
-        public async Task<ActionResult<LoginResponseDTO>> UpdateCustomer([FromBody] CustomerUpdateDTO customerUpdateDTO)
+        [HttpPut("UpdateCustomer")]
+        public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer([FromBody] CustomerUpdateDTO customerUpdateDTO)
         {
             try
             {
-                var result = await _customerService.UpdateCustomer(customerUpdateDTO);
+                var result = await _customerService.UpdateCustomerAsync(customerUpdateDTO);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpDelete("DeleteCustomer/{ID}")]
+        public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(string ID)
+        {
+            try
+            {
+                var result = await _customerService.DeleteCustomerAsync(ID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpGet("GetCustomerByID/{ID}")]
+        public async Task<ActionResult<CustomerResponseDTO>> GetCustomerByID(string ID)
+        {
+            try
+            {
+                var result = await _customerService.GetCustomerByIDAsync(ID);
                 if (result != null)
                 {
                     return Ok(result);
