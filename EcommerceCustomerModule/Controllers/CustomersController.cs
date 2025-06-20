@@ -31,5 +31,38 @@ namespace EcommerceCustomerModule.Controllers
                 throw ex;
             }
         }
+        [HttpPost("LogInCustomer")]
+        public async Task<ActionResult<LoginResponseDTO>> LogInCustomer([FromBody] LoginDTO loginDTO)
+        {
+            try
+            {
+                var result = await _customerService.LoginCustomerAsync(loginDTO);
+                if(result!=null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }catch(Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpPost("UpdateCustomer")]
+        public async Task<ActionResult<LoginResponseDTO>> UpdateCustomer([FromBody] CustomerUpdateDTO customerUpdateDTO)
+        {
+            try
+            {
+                var result = await _customerService.UpdateCustomer(customerUpdateDTO);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

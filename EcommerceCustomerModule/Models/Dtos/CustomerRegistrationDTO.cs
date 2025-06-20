@@ -18,10 +18,10 @@ namespace EcommerceCustomerModule.Models.Dtos
         [Required(ErrorMessage = "PhoneNumber is required.")]
         [Phone(ErrorMessage = "Invalid Phone Number.")]
         public string PhoneNumber { get; set; }
-        //[Required(ErrorMessage = "DateOfBirth is required.")]
-        //public DateTime DateOfBirth { get; set; }
-        //[Required(ErrorMessage = "Password is required.")]
-        //[MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
+        [Required(ErrorMessage = "UserName is required.")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "Password is required.")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
         public string Password { get; set; }
     }
 }

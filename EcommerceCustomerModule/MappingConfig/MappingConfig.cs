@@ -9,6 +9,8 @@ namespace EcommerceCustomerModule.MappingConfig
         public MappingConfig() 
         {
             CreateMap<Customer,CustomerRegistrationDTO>().ReverseMap();
+            CreateMap<Customer, CustomerResponseDTO>().ReverseMap();
+            CreateMap<Customer, CustomerUpdateDTO>().ReverseMap();
         }
     }
 }
