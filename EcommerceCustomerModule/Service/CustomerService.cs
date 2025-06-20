@@ -98,7 +98,7 @@ namespace EcommerceCustomerModule.Service
             }
         }
 
-        public async Task<ApiResponse<CustomerResponseDTO>> UpdateCustomer(CustomerUpdateDTO customerUpdateDTO)
+        public async Task<ApiResponse<CustomerResponseDTO>> UpdateCustomerAsync(CustomerUpdateDTO customerUpdateDTO)
         {
             try
             {
@@ -133,7 +133,48 @@ namespace EcommerceCustomerModule.Service
             }
         }
 
-        public Task<ApiResponse<CustomerResponseDTO>> UpdateCustomer(int id)
+        public async Task<ApiResponse<CustomerResponseDTO>> DeleteCustomerAsync(string id)
+        {
+            try
+            {
+                var isCustomerExists = await _context.Customers.FirstOrDefaultAsync(u => u.Id == id);
+                if(isCustomerExists != null)
+                {
+                    var isDeleted =  _context.Customers.Remove(isCustomerExists);
+                    await _context.SaveChangesAsync();
+                    if(isDeleted!=null)
+                    {
+                        var deletedCustResponse = _mapper.Map<CustomerResponseDTO>(isCustomerExists);
+                        return new ApiResponse<CustomerResponseDTO>(deletedCustResponse,200,"Customer deleted successfully!",true);
+                    }
+                }
+                return new ApiResponse<CustomerResponseDTO>(400, "Customer not found!", false);
+            }
+            catch(Exception e)
+            {
+                return new ApiResponse<CustomerResponseDTO>(500, $"An unexpected error occurred while processing your request : {e}", false);
+            }
+        }
+
+        public async Task<ApiResponse<CustomerResponseDTO>> GetCustomerByIDAsync(string id)
+        {
+            try
+            {
+                var isCustomerExists = await _context.Customers.FirstOrDefaultAsync(u => u.Id == id);
+                if (isCustomerExists != null)
+                {
+                    var CustResponse = _mapper.Map<CustomerResponseDTO>(isCustomerExists);
+                        return new ApiResponse<CustomerResponseDTO>(CustResponse, 200, "Customer details fetched!", true);
+                }
+                return new ApiResponse<CustomerResponseDTO>(400, "Customer not found!", false);
+            }
+            catch (Exception e)
+            {
+                return new ApiResponse<CustomerResponseDTO>(500, $"An unexpected error occurred while processing your request : {e}", false);
+            }
+        }
+
+        public Task<ApiResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
         {
             throw new NotImplementedException();
         }
