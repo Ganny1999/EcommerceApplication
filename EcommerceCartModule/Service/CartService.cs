@@ -116,5 +116,74 @@ namespace EcommerceCartModule.Service
                 return new ApiResponse<CartResponseDto>(500,$"Sothing went wrong : {ex}",false);
             }
         }
+
+        public async Task<ApiResponse<CartResponseDto>> UpdateCartAsync(UpdateCartDto updateCartDto)
+        {
+            try
+            {
+                var IsCustomerExist = await _customerService.GetCustomerByIDAsync(updateCartDto.CustomerId);
+                var IsProductExist = await _productService.GetProductByIDAsync(updateCartDto.ProductId);
+                var isCartExistsForCustomer = await _context.Carts.FirstOrDefaultAsync(u => u.CustomerId == IsCustomerExist.Data.Id);
+                if (isCartExistsForCustomer!= null)
+                {
+                    var cartItem = await _context.CartItems.FirstOrDefaultAsync(u=>u.CartId==isCartExistsForCustomer.CartId && u.ProductId == updateCartDto.ProductId);
+                    if(cartItem!=null)
+                    {
+                        cartItem.Quantity = updateCartDto.Quantity;
+                        cartItem.TotalItemPrice = IsProductExist.Data.Price * cartItem.Quantity;
+                        cartItem.UpdatedAt = DateTime.UtcNow;
+
+                        _context.CartItems.Update(cartItem);
+                        await _context.SaveChangesAsync();
+
+                        var cartItems = await _context.CartItems.Where(u => u.CartId == isCartExistsForCustomer.CartId).ToListAsync();
+
+                        var cartItemsDto = _mapper.Map<List<CartItemResponseDto>>(cartItems);
+                        var cartDto = _mapper.Map<CartResponseDto>(isCartExistsForCustomer);
+                        cartDto.CartItems = _mapper.Map<List<CartItemResponseDto>>(cartItemsDto);
+
+                        return new ApiResponse<CartResponseDto>(cartDto, 200, "Cart updated successfully.", true);
+                    }
+                }
+                return new ApiResponse<CartResponseDto>(400, $"Cart does not have Items with ", false);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<CartResponseDto>(500, $"Sothing went wrong : {ex}", false);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ClearCartAsync(string customerID)
+        {
+            try
+            {
+                var IsCustomerExist = await _customerService.GetCustomerByIDAsync(customerID);
+                var isCartExistsForCustomer = await _context.Carts.FirstOrDefaultAsync(u => u.CustomerId == IsCustomerExist.Data.Id);
+                if(isCartExistsForCustomer != null)
+                {
+                    var cartItems = (from items in await _context.CartItems.ToListAsync()
+                              where items.CartId == isCartExistsForCustomer.CartId
+                              select items).ToList();
+
+                    _context.CartItems.RemoveRange(cartItems);
+                    var removeCart = _context.Carts.Remove(isCartExistsForCustomer);
+                    await _context.SaveChangesAsync();
+
+                    var isCartItemsDeleted = (from items in await _context.CartItems.ToListAsync()
+                                    where items.CartId == isCartExistsForCustomer.CartId
+                                    select items).ToList();
+                    if (isCartItemsDeleted.Count==0)
+                    {
+                        return new ApiResponse<bool>(200, $"Cart has been cleared", true);
+                    }
+
+                }
+                return new ApiResponse<bool>(400, $"Cart is empty", false);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool>(500, $"Something went wrong : {ex}", false);
+            }
+        }
     }
 }

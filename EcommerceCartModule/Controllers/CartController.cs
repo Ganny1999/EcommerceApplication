@@ -31,5 +31,39 @@ namespace EcommerceCartModule.Controllers
                 throw ex;
             }
         }
+        [HttpPost("UpdateCart")]
+        public async Task<ActionResult<CartResponseDto>> UpdateCart([FromBody] UpdateCartDto updateCartDto)
+        {
+            try
+            {
+                var result = await _cartService.UpdateCartAsync(updateCartDto);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpPost("ClearCart/{customerID}")]
+        public async Task<ActionResult<bool>> ClearCart(string customerID)
+        {
+            try
+            {
+                var result = await _cartService.ClearCartAsync(customerID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
