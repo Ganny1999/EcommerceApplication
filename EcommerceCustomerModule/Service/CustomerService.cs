@@ -156,7 +156,7 @@ namespace EcommerceCustomerModule.Service
             }
         }
 
-        public async Task<ApiResponse<CustomerResponseDTO>> GetCustomerByIDAsync(string id)
+        public async Task<CustomerResponseDTO> GetCustomerByIDAsync(string id)
         {
             try
             {
@@ -164,13 +164,14 @@ namespace EcommerceCustomerModule.Service
                 if (isCustomerExists != null)
                 {
                     var CustResponse = _mapper.Map<CustomerResponseDTO>(isCustomerExists);
-                        return new ApiResponse<CustomerResponseDTO>(CustResponse, 200, "Customer details fetched!", true);
+                        return CustResponse;
                 }
-                return new ApiResponse<CustomerResponseDTO>(400, "Customer not found!", false);
+                return _mapper.Map<CustomerResponseDTO>(isCustomerExists);
             }
             catch (Exception e)
             {
-                return new ApiResponse<CustomerResponseDTO>(500, $"An unexpected error occurred while processing your request : {e}", false);
+                throw e;
+                //return new ApiResponse<CustomerResponseDTO>(500, $"An unexpected error occurred while processing your request : {e}", false);
             }
         }
 

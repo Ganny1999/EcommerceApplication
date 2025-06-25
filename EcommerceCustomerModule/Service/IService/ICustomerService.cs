@@ -9,7 +9,7 @@ namespace EcommerceCustomerModule.Service.IService
         Task<ApiResponse<LoginResponseDTO>> LoginCustomerAsync(LoginDTO loginDTO);
         Task<ApiResponse<CustomerResponseDTO>> UpdateCustomerAsync(CustomerUpdateDTO customerUpdateDTO);
         Task<ApiResponse<CustomerResponseDTO>> DeleteCustomerAsync(string id);
-        Task<ApiResponse<CustomerResponseDTO>> GetCustomerByIDAsync(string id);
+        Task<CustomerResponseDTO> GetCustomerByIDAsync(string id);
         Task<ApiResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
     }
 }

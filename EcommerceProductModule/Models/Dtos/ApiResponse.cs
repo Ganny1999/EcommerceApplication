@@ -6,6 +6,10 @@
         public int StatusCode { get; set; }
         public string Message { get; set; }
         public bool Status { get; set; }
+        public ApiResponse()
+        {
+                
+        }
         public ApiResponse(int statusCode,bool status,T data, string message)
         {
             StatusCode= statusCode;
