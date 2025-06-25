@@ -68,7 +68,7 @@ namespace EcommerceProductModule.Service
             return new ApiResponse<List<ProductResponseDto>>(200, true, productsDtos, $"Product list based on the category.");
         }
 
-        public async Task<ApiResponse<ProductResponseDto>> GetProductByIdAsync(int ProductID)
+        public async Task<ProductResponseDto> GetProductByIdAsync(int ProductID)
         {
             try
             {
@@ -76,13 +76,14 @@ namespace EcommerceProductModule.Service
                 if (productExists != null)
                 {
                     var productResponseDto = _mapper.Map<ProductResponseDto>(productExists);
-                    return new ApiResponse<ProductResponseDto>(200, true, productResponseDto, $"Product found with {ProductID} successfully.");
+                    return productResponseDto;
+                    //return new ApiResponse<ProductResponseDto>(200, true, productResponseDto, $"Product found with {ProductID} successfully.");
                 }
-                return new ApiResponse<ProductResponseDto>(400, false, $"Product not found with ID : {ProductID}.");
+                return _mapper.Map<ProductResponseDto>(productExists);
             }
             catch (Exception ex)
             {
-                return new ApiResponse<ProductResponseDto>(500, false, $"Something went wrong : {ex}");
+                throw ex;
             }
         }
 

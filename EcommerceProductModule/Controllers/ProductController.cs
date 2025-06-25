@@ -1,4 +1,5 @@
-﻿using EcommerceProductModule.Models.Dtos.ProductDto;
+﻿using EcommerceProductModule.Models.Dtos;
+using EcommerceProductModule.Models.Dtos.ProductDto;
 using EcommerceProductModule.Service;
 using EcommerceProductModule.Service.IService;
 using Microsoft.AspNetCore.Http;
@@ -67,14 +68,15 @@ namespace EcommerceProductModule.Controllers
             }
         }
         [HttpGet("GetProductByID/{ProductID:int}")]
-        public async Task<ActionResult<ProductResponseDto>> GetProductByID(int ProductID)
+        public async Task<ActionResult<ApiResponse<ProductResponseDto>>> GetProductByID(int ProductID)
         {
             try
             {
                 var result = await _productService.GetProductByIdAsync(ProductID);
                 if (result != null)
                 {
-                    return Ok(result);
+                    return new ApiResponse<ProductResponseDto>(200,true,result,$"Product found at {ProductID}");
+                    //return Ok(result);
                 }
                 return BadRequest();
             }

@@ -82,14 +82,15 @@ namespace EcommerceCustomerModule.Controllers
             }
         }
         [HttpGet("GetCustomerByID/{ID}")]
-        public async Task<ActionResult<CustomerResponseDTO>> GetCustomerByID(string ID)
+        public async Task<ActionResult<ApiResponse<CustomerResponseDTO>>> GetCustomerByID(string ID)
         {
             try
             {
                 var result = await _customerService.GetCustomerByIDAsync(ID);
                 if (result != null)
                 {
-                    return Ok(result);
+                    return new ApiResponse<CustomerResponseDTO>(result,200,$"Customer found with {ID}",true);
+                   // return Ok(result);
                 }
                 return BadRequest();
             }
