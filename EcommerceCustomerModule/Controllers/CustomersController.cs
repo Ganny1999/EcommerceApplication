@@ -1,7 +1,11 @@
-﻿using EcommerceCustomerModule.Models.Dtos;
+﻿using EcommerceCustomerModule.Models;
+using EcommerceCustomerModule.Models.Dtos;
 using EcommerceCustomerModule.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json;
+
 
 namespace EcommerceCustomerModule.Controllers
 {
@@ -98,6 +102,39 @@ namespace EcommerceCustomerModule.Controllers
             {
                 throw e;
             }
+        }
+        [HttpGet("GetAllActiveOrInActiveUsers/{flag:int}")]
+        public async Task<ActionResult<ApiResponse<List<CustomerResponseDTO>>>> GetAllActiveOrInActiveUsers(int flag)
+        {
+            try
+            {
+                var result = await _customerService.GetAllActiveOrInActiveUsersAsync(flag);
+                if (result != null)
+                {
+                    return new ApiResponse<List<CustomerResponseDTO>>(result, 200, $"List of customers is {flag}", true);
+                    // return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpGet]
+        [HttpPut]
+        
+        public void GetAllUsers() 
+        {
+            var cust = new Customer()
+            {
+                FirstName = "Ganesh"
+            };
+            var rees = JsonConvert.SerializeObject(cust);
+            var res = System.Text.Json.JsonSerializer.Serialize(cust);
+
+            var rees1 = JsonConvert.DeserializeObject<Customer>(rees);
+            var res1 = System.Text.Json.JsonSerializer.Deserialize<Customer>(res);
         }
     }
 }
