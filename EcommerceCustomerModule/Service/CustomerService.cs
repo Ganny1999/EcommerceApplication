@@ -179,5 +179,20 @@ namespace EcommerceCustomerModule.Service
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<CustomerResponseDTO>> GetAllActiveOrInActiveUsersAsync(int flag)
+        {
+            try
+            {
+                var users = _context.Users.FromSql($"EXEC sp_is_user_active @IsActive = {flag}").ToList();
+                var userslist = _mapper.Map<List<CustomerResponseDTO>>(users);
+
+                return userslist;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
