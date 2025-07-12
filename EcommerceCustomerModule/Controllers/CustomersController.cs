@@ -3,7 +3,6 @@ using EcommerceCustomerModule.Models.Dtos;
 using EcommerceCustomerModule.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Text.Json;
 
 
@@ -130,10 +129,10 @@ namespace EcommerceCustomerModule.Controllers
             {
                 FirstName = "Ganesh"
             };
-            var rees = JsonConvert.SerializeObject(cust);
+            //var rees = JsonConvert.SerializeObject(cust);
             var res = System.Text.Json.JsonSerializer.Serialize(cust);
 
-            var rees1 = JsonConvert.DeserializeObject<Customer>(rees);
+            //var rees1 = JsonConvert.DeserializeObject<Customer>(rees);
             var res1 = System.Text.Json.JsonSerializer.Deserialize<Customer>(res);
         }
     }

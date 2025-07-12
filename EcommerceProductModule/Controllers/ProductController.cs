@@ -43,7 +43,7 @@ namespace EcommerceProductModule.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest();
+                return BadRequest("Invalid operation");
             }
             catch (Exception ex)
             {

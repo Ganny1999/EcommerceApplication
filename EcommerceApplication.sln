@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceCartModule", "Ecom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceOrderModule", "EcommerceOrderModule\EcommerceOrderModule.csproj", "{758AD49B-471F-416E-BB66-746D27E024F5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XUnitTestCasesECommerce", "XUnitTestCasesECommerce", "{AAB22356-129C-4850-9084-D53A89F51E3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommersProduct.Test", "ECommersProduct.Test\ECommersProduct.Test.csproj", "{FD167BEE-D8ED-4D0A-A804-99D2E086B29F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{758AD49B-471F-416E-BB66-746D27E024F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{758AD49B-471F-416E-BB66-746D27E024F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{758AD49B-471F-416E-BB66-746D27E024F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD167BEE-D8ED-4D0A-A804-99D2E086B29F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD167BEE-D8ED-4D0A-A804-99D2E086B29F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD167BEE-D8ED-4D0A-A804-99D2E086B29F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD167BEE-D8ED-4D0A-A804-99D2E086B29F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +52,7 @@ Global
 		{81F4605A-4D0E-469F-8E5B-4BDE322434B9} = {7D0B887F-4BC5-4987-934C-55B322BC2AD7}
 		{39703A71-7C13-45BB-B93C-628E3B158312} = {7D0B887F-4BC5-4987-934C-55B322BC2AD7}
 		{758AD49B-471F-416E-BB66-746D27E024F5} = {7D0B887F-4BC5-4987-934C-55B322BC2AD7}
+		{FD167BEE-D8ED-4D0A-A804-99D2E086B29F} = {AAB22356-129C-4850-9084-D53A89F51E3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3B5D23F-291A-423C-BA8C-2259D780A608}
