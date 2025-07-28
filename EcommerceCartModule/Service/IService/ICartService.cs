@@ -8,6 +8,7 @@ namespace EcommerceCartModule.Service.IService
     {
         Task<ApiResponse<CartResponseDto>> AddCartAsync(AddCartDto addCartDto);
         Task<ApiResponse<CartResponseDto>> UpdateCartAsync(UpdateCartDto updateCartDto);
+        Task<ApiResponse<CartResponseDto>> GetCartAsync(int CartID);
         Task<ApiResponse<bool>> ClearCartAsync(string customerID);
     }
 }
