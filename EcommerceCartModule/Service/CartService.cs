@@ -4,6 +4,7 @@ using EcommerceCartModule.Models;
 using EcommerceCartModule.Models.Dtos;
 using EcommerceCartModule.Service.IService;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace EcommerceCartModule.Service
 {
@@ -183,6 +184,37 @@ namespace EcommerceCartModule.Service
             catch (Exception ex)
             {
                 return new ApiResponse<bool>(500, $"Something went wrong : {ex}", false);
+            }
+        }
+
+        public async Task<ApiResponse<CartResponseDto>> GetCartAsync(int CartID)
+        {
+            try
+            {
+                // Check if Cart Is Not Empty
+                var isCartFound = await _context.Carts.FirstOrDefaultAsync(u => u.CartId == CartID);
+                isCartFound.CartItems = await _context.CartItems.Where(u => u.CartId == isCartFound.CartId).ToListAsync();
+
+                // Fetch price from product & assign to products inside CartItem.
+                
+                /* Not working yet need to check external endpoint data is null.
+                foreach(var item in isCartFound.CartItems)
+                {
+                    var product = await _productService.GetProductByIDAsync(CartID);
+                    item.Price = product.Data.Price;
+                }
+                */
+                if (isCartFound != null)
+                {
+                    var CartDto = _mapper.Map<CartResponseDto>(isCartFound);
+                    CartDto.CartItems = _mapper.Map<List<CartItemResponseDto>>(isCartFound.CartItems);
+                    return new ApiResponse<CartResponseDto>(CartDto, 200, "Cart details!", true);
+                }
+                return new ApiResponse<CartResponseDto>(404, "Cart details could not found!", false);
+            }
+            catch(Exception ex)
+            {
+                return new ApiResponse<CartResponseDto>(500, $"Something went wrong : {ex}", false);
             }
         }
     }

@@ -48,7 +48,24 @@ namespace EcommerceCartModule.Controllers
                 throw ex;
             }
         }
-        [HttpPost("ClearCart/{customerID}")]
+        [HttpGet("GetCart/{CartID}")]
+        public async Task<ActionResult<CartResponseDto>> GetCart(int CartID)
+        {
+            try
+            {
+                var result = await _cartService.GetCartAsync(CartID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet("ClearCart/{customerID}")]
         public async Task<ActionResult<bool>> ClearCart(string customerID)
         {
             try

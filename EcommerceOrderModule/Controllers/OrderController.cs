@@ -1,4 +1,5 @@
-﻿using EcommerceOrderModule.Service.Iservice;
+﻿using EcommerceOrderModule.Models.Dtos;
+using EcommerceOrderModule.Service.Iservice;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,23 @@ namespace EcommerceOrderModule.Controllers
             //var fileName = $"DailyReport_{reportDate:yyyy-MM-dd}.xlsx";
 
             //return File(fileByte, "application/vnd.api+json", fileName);
+        }
+        [HttpGet("PlaceOrder/{CartID}")]
+        public async Task<ActionResult<OrderResponseDto>> PlaceOrder(int CartID)
+        {
+            try
+            {
+                var result = await _orderService.PlaceOrderAsync(CartID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

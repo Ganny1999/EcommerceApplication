@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceCartModule.Models.Dtos
+namespace EcommerceOrderModule.Models.Dtos
 {
     public class CartItemResponseDto
     {
