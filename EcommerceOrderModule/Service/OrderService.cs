@@ -81,9 +81,11 @@ namespace EcommerceOrderModule.Service
             try
             {
                 var isOrderFound = await _context.Orders.FirstOrDefaultAsync(u=>u.OrderID == OrderID);
+                isOrderFound.OrderItems = await _context.OrderItems.Where(u=>u.OrderID== OrderID).ToListAsync();
                 if(isOrderFound!=null)
                 {
                     var orderDto = _mapper.Map<OrderResponseDto>(isOrderFound);
+                    orderDto.OrderItems = _mapper.Map<List<OrderItemsResponseDto>>(orderDto.OrderItems);
                     return new ApiResponse<OrderResponseDto>(orderDto,200, $"Order found with {OrderID}",true); ;
                 }
                 return new ApiResponse<OrderResponseDto>(404, "Order not found with the ", true);
