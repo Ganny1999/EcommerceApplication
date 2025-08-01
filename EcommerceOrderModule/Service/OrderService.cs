@@ -149,7 +149,7 @@ namespace EcommerceOrderModule.Service
                         
                         if (OrderDto != null && OrderDto.OrderItems !=null)
                         {
-                             //var CartClered = await _cartServiceExternal.ClearCart(isCartEmpty.Data.CustomerId);
+                             var CartClered = await _cartServiceExternal.ClearCart(isCartEmpty.Data.CustomerId);
                         }
                         return new ApiResponse<OrderResponseDto>(OrderDto,200, "Order has been placed!!!", true);
                     }
