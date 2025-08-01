@@ -8,8 +8,8 @@ namespace EcommerceOrderModule.Service.Iservice
         public byte[] GenerateDailyOrderReportExcel(DateTime dateTime);
 
         public Task<ApiResponse<OrderResponseDto>> PlaceOrderAsync(int CartID);
-        public OrderResponseDto GetOrderByIDAsync(string OrderID);
+        public Task<ApiResponse<OrderResponseDto>> GetOrderByIDAsync(string OrderID);
         public bool OrderStatusManagementAsync(string OrderID);
-        public OrderResponseDto GetOrderByCustomerAsync(string CUstomerID);
+        public Task<ApiResponse<OrderResponseDto>> GetOrderByCustomerAsync(string CUstomerID);
     }
 }

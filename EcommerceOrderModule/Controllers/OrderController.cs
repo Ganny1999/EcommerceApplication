@@ -25,12 +25,46 @@ namespace EcommerceOrderModule.Controllers
 
             //return File(fileByte, "application/vnd.api+json", fileName);
         }
-        [HttpGet("PlaceOrder/{CartID}")]
+        [HttpPost("PlaceOrder/{CartID}")]
         public async Task<ActionResult<OrderResponseDto>> PlaceOrder(int CartID)
         {
             try
             {
                 var result = await _orderService.PlaceOrderAsync(CartID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet("GetOrderByID/{OrderID}")]
+        public async Task<ActionResult<OrderResponseDto>> GetOrderByID(string OrderID)
+        {
+            try
+            {
+                var result = await _orderService.GetOrderByIDAsync(OrderID);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet("GetOrderByCustomerID/{CustomerID}")]
+        public async Task<ActionResult<OrderResponseDto>> GetOrderByCustomerID(string CustomerID)
+        {
+            try
+            {
+                var result = await _orderService.GetOrderByCustomerAsync(CustomerID);
                 if (result != null)
                 {
                     return Ok(result);

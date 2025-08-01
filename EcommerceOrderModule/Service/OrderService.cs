@@ -56,14 +56,42 @@ namespace EcommerceOrderModule.Service
         }
 
         // Fetch all the details filter by customer ID.
-        public OrderResponseDto GetOrderByCustomerAsync(string CUstomerID)
+        public async Task<ApiResponse<OrderResponseDto>> GetOrderByCustomerAsync(string CustomerID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var OrderFound = await _context.Orders.FirstOrDefaultAsync(u => u.CustomerID == CustomerID);
+                if (OrderFound != null)
+                {
+                    var OrderItemsFound = await _context.OrderItems.Where(u=>u.OrderID == OrderFound.OrderID).ToListAsync();
+                    OrderFound.OrderItems = OrderItemsFound;
+                    var orderDto = _mapper.Map<OrderResponseDto>(OrderFound);
+                    return new ApiResponse<OrderResponseDto>(orderDto, 200, $"Order found with {CustomerID}", true); ;
+                }
+                return new ApiResponse<OrderResponseDto>(404, "Order not found with the ", true);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<OrderResponseDto>(500, $"Something went wrong: {ex}", false);
+            }
         }
         // Fetch the order details by order ID.
-        public OrderResponseDto GetOrderByIDAsync(string OrderID)
+        public async Task<ApiResponse<OrderResponseDto>> GetOrderByIDAsync(string OrderID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var isOrderFound = await _context.Orders.FirstOrDefaultAsync(u=>u.OrderID == OrderID);
+                if(isOrderFound!=null)
+                {
+                    var orderDto = _mapper.Map<OrderResponseDto>(isOrderFound);
+                    return new ApiResponse<OrderResponseDto>(orderDto,200, $"Order found with {OrderID}",true); ;
+                }
+                return new ApiResponse<OrderResponseDto>(404, "Order not found with the ", true);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<OrderResponseDto>(500, $"Something went wrong: {ex}", false);
+            }
         }
         // Get the items from the cart
         // Add new order in Db and marks the customer’s cart as checked out.
@@ -74,7 +102,7 @@ namespace EcommerceOrderModule.Service
             {
                 // Get the Cart and CartItems
                 var isCartEmpty = await _cartServiceExternal.GetCart(CartID);
-                if (isCartEmpty != null)
+                if (isCartEmpty.Data != null)
                 {
                     var CartItems = isCartEmpty.Data.CartItems;
                     // Create New Order
@@ -121,7 +149,7 @@ namespace EcommerceOrderModule.Service
                         
                         if (OrderDto != null && OrderDto.OrderItems !=null)
                         {
-                             var CartClered = await _cartServiceExternal.ClearCart(isCartEmpty.Data.CustomerId);
+                             //var CartClered = await _cartServiceExternal.ClearCart(isCartEmpty.Data.CustomerId);
                         }
                         return new ApiResponse<OrderResponseDto>(OrderDto,200, "Order has been placed!!!", true);
                     }
