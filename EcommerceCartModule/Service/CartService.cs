@@ -195,18 +195,21 @@ namespace EcommerceCartModule.Service
                 var isCartFound = await _context.Carts.FirstOrDefaultAsync(u => u.CartId == CartID);
                 isCartFound.CartItems = await _context.CartItems.Where(u => u.CartId == isCartFound.CartId).ToListAsync();
 
-                // Fetch price from product & assign to products inside CartItem.
-                
-                /* Not working yet need to check external endpoint data is null.
+                // Fetch price from product & assign to products inside CartItem.'
+                decimal TotalPrice = 0;
                 foreach(var item in isCartFound.CartItems)
                 {
-                    var product = await _productService.GetProductByIDAsync(CartID);
+                    var product = await _productService.GetProductByIDAsync(item.ProductId);
+                    TotalPrice = TotalPrice + (product.Data.Price * item.Quantity);
+
+                    // assign product indivisual price to Item price
                     item.Price = product.Data.Price;
                 }
-                */
+                
                 if (isCartFound != null)
                 {
                     var CartDto = _mapper.Map<CartResponseDto>(isCartFound);
+                    CartDto.TotalAmount = TotalPrice;
                     CartDto.CartItems = _mapper.Map<List<CartItemResponseDto>>(isCartFound.CartItems);
                     return new ApiResponse<CartResponseDto>(CartDto, 200, "Cart details!", true);
                 }
