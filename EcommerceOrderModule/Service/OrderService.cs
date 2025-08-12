@@ -104,6 +104,7 @@ namespace EcommerceOrderModule.Service
             {
                 // Get the Cart and CartItems
                 var isCartEmpty = await _cartServiceExternal.GetCart(CartID);
+                var transaction = await _context.Database.BeginTransactionAsync();
                 if (isCartEmpty.Data != null)
                 {
                     var CartItems = isCartEmpty.Data.CartItems;
@@ -150,8 +151,9 @@ namespace EcommerceOrderModule.Service
                         // If Order successfully placed then clear the cart
                         
                         if (OrderDto != null && OrderDto.OrderItems !=null)
-                        {
+                        {  
                              var CartClered = await _cartServiceExternal.ClearCart(isCartEmpty.Data.CustomerId);
+                             await _context.Database.CommitTransactionAsync();
                         }
                         return new ApiResponse<OrderResponseDto>(OrderDto,200, "Order has been placed!!!", true);
                     }
@@ -160,6 +162,7 @@ namespace EcommerceOrderModule.Service
             }
             catch(Exception ex)
             {
+                 await _context.Database.RollbackTransactionAsync();
                 return new ApiResponse<OrderResponseDto>(500, $"Something went wrong: {ex}", false);
             }
         }
