@@ -1,4 +1,5 @@
-﻿using EcommerceProductModule.Models.Dtos;
+﻿using EcommerceProductModule.Models;
+using EcommerceProductModule.Models.Dtos;
 using EcommerceProductModule.Models.Dtos.ProductDto;
 using EcommerceProductModule.Service;
 using EcommerceProductModule.Service.IService;
@@ -102,6 +103,19 @@ namespace EcommerceProductModule.Controllers
             {
                 throw ex;
             }
+        }
+        // Pagination API
+        [HttpGet("GetProductData")]
+        public List<Product> GetProductData(int page=1,int pageSize=10)
+        {
+            var ProdList = new List<Product>();
+            for(int i=1;i<=100;i++)
+            {
+                ProdList.Add( new Product { Id=i,Description=$"Description :{i}",Price=10*i,CategoryId=1,StockQuantity=100,Name=$"Item {i}"});
+            }
+
+            var ProductPerPage = ProdList.Skip((page-1) * pageSize).Take(pageSize).ToList();
+            return ProductPerPage;
         }
     }
 }
