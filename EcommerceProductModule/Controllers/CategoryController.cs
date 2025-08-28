@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace EcommerceProductModule.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -34,7 +35,27 @@ namespace EcommerceProductModule.Controllers
             }
         }
         [HttpGet("GetAllCategories")]
+        [ApiVersion("1.0")]
         public async Task<ActionResult<ApiResponse<List<CategoryResponseDto>>>> GetAllCategories()
+        {
+            try
+            {
+                var result = await _categoryService.GetAllCategoryAsync();
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
+        [HttpGet("GetAllCategoriesV2")]
+        [ApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponse<List<CategoryResponseDto>>>> GetAllCategoriesV2()
         {
             try
             {
