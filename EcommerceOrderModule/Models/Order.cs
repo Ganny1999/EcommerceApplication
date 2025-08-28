@@ -15,6 +15,7 @@ namespace EcommerceOrderModule.Models
         [Required(ErrorMessage = "Customer is required.")]
         public string CustomerID { get; set; }
         public decimal TotalAmount { get; set; }
+        public OrderStatus Status {  get; set; }
         public  enum OrderStatus
         {
             Pending = 1,
