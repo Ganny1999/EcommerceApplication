@@ -115,7 +115,8 @@ namespace EcommerceOrderModule.Service
                         OrderNumber = Guid.NewGuid().ToString(),
                         CustomerID = isCartEmpty.Data.CustomerId,
                         OrderDate = DateTime.UtcNow,
-                        TotalAmount = isCartEmpty.Data.TotalAmount
+                        TotalAmount = isCartEmpty.Data.TotalAmount,
+                        Status = Order.OrderStatus.Success
                     };
                     // Place new Order in the database
                     var isOrderSuccessed = _context.Orders.Add(placeOrder); 
