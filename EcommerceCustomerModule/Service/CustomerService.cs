@@ -12,11 +12,13 @@ namespace EcommerceCustomerModule.Service
     {
         private readonly AppDbContext _context;
         private readonly UserManager<Customer> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        public CustomerService(AppDbContext context, UserManager<Customer> userManager, IMapper mapper)
+        public CustomerService(AppDbContext context, UserManager<Customer> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _context = context;  
             _userManager = userManager;
+            _roleManager = roleManager;
             _mapper= mapper;
         }
         public async Task<ApiResponse<CustomerResponseDTO>> RegisterCustomerAsync(CustomerRegistrationDTO customerRegistrationDTO)
@@ -193,6 +195,25 @@ namespace EcommerceCustomerModule.Service
             {
                 throw ex;
             }
+        }
+
+        public async Task<ApiResponse<bool>> CreateRole(string role)
+        {
+            try
+            {
+                var isRoleExists = await _roleManager.RoleExistsAsync(role.ToLower());
+                if (!isRoleExists)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(role.ToLower()));
+                    return new ApiResponse<bool>(200, "Role has been created!!!", true);
+                }
+                return new ApiResponse<bool>(400, "Role already exists!!!", false);
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+            
         }
     }
 }
