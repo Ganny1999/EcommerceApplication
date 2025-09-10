@@ -12,5 +12,6 @@ namespace EcommerceCustomerModule.Service.IService
         Task<CustomerResponseDTO> GetCustomerByIDAsync(string id);
         Task<List<CustomerResponseDTO>> GetAllActiveOrInActiveUsersAsync(int flag);
         Task<ApiResponse<string>> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
+        Task<ApiResponse<bool>> CreateRole(string role);
     }
 }

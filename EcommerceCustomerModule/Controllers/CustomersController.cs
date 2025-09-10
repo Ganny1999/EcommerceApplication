@@ -120,6 +120,24 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
+        [HttpGet("CreateRole/{role}")]
+        public async Task<ActionResult<ApiResponse<bool>>> CreateRole(string role)
+        {
+            try
+            {
+                var result = await _customerService.CreateRole(role);
+                if (result.Status == true)
+                {
+                    return new ApiResponse<bool>(200, $"Role : {role.ToUpper()} has been created!", true);
+                    // return Ok(result);
+                }
+                return new ApiResponse<bool>(400, $"Role : {role.ToUpper()} already exist!", false);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         [HttpGet]
         [HttpPut]
         
