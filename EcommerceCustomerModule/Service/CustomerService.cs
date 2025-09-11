@@ -38,6 +38,7 @@ namespace EcommerceCustomerModule.Service
                 //customer.Email = customerRegistrationDTO.Email;
                 //customer.isActive = true;
 
+                /// 1. Register User
                 var customer = _mapper.Map<Customer>(customerRegistrationDTO);
                 customer.isActive = true;
 
@@ -46,8 +47,14 @@ namespace EcommerceCustomerModule.Service
                 {
                     var IsCustomerAdded = await _context.Customers.FirstOrDefaultAsync(u => u.Email.ToLower() == customerRegistrationDTO.Email.ToLower());
                     var customerResponse = _mapper.Map<CustomerResponseDTO>(IsCustomerAdded);
-                    
-                    
+
+                 /// 2. Ensure role is created, if created assign role to user.
+                 /// Note : Only admin can create new role.
+                    if(await _roleManager.RoleExistsAsync("customer"))
+                    {
+                        await _userManager.AddToRoleAsync(customer, "customer");
+                    }
+
                     //var customerResponse = new CustomerResponseDTO()
                     //{
                     //    FirstName = IsCustomerAdded.FirstName,

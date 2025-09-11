@@ -1,6 +1,7 @@
 ﻿using EcommerceCustomerModule.Models;
 using EcommerceCustomerModule.Models.Dtos;
 using EcommerceCustomerModule.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -121,6 +122,7 @@ namespace EcommerceCustomerModule.Controllers
             }
         }
         [HttpGet("CreateRole/{role}")]
+        [Authorize("admin")]
         public async Task<ActionResult<ApiResponse<bool>>> CreateRole(string role)
         {
             try
