@@ -18,6 +18,7 @@ namespace EcommerceCustomerModule.Controllers
         {
                 _customerService = customerService;
         }
+        [Authorize(Roles = "admin,customer")]
         [HttpPost("RegisterCustomer")]
         public async Task<ActionResult<CustomerResponseDTO>> RegisterCustomer([FromBody] CustomerRegistrationDTO customerRegistrationDTO)
         {
@@ -35,6 +36,7 @@ namespace EcommerceCustomerModule.Controllers
                 throw ex;
             }
         }
+        [Authorize(Roles = "admin,customer")]
         [HttpPost("LogInCustomer")]
         public async Task<ActionResult<LoginResponseDTO>> LogInCustomer([FromBody] LoginDTO loginDTO)
         {
@@ -51,6 +53,7 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
+        [Authorize(Roles = "admin,customer")]
         [HttpPut("UpdateCustomer")]
         public async Task<ActionResult<CustomerResponseDTO>> UpdateCustomer([FromBody] CustomerUpdateDTO customerUpdateDTO)
         {
@@ -68,6 +71,7 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteCustomer/{ID}")]
         public async Task<ActionResult<CustomerResponseDTO>> DeleteCustomer(string ID)
         {
@@ -85,6 +89,7 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
+        [Authorize(Roles = "admin,customer")]
         [HttpGet("GetCustomerByID/{ID}")]
         public async Task<ActionResult<ApiResponse<CustomerResponseDTO>>> GetCustomerByID(string ID)
         {
@@ -103,6 +108,7 @@ namespace EcommerceCustomerModule.Controllers
                 throw e;
             }
         }
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllActiveOrInActiveUsers/{flag:int}")]
         public async Task<ActionResult<ApiResponse<List<CustomerResponseDTO>>>> GetAllActiveOrInActiveUsers(int flag)
         {
@@ -122,7 +128,8 @@ namespace EcommerceCustomerModule.Controllers
             }
         }
         [HttpGet("CreateRole/{role}")]
-        [Authorize("admin")]
+        [Authorize(Roles ="admin")]
+        [Authorize]
         public async Task<ActionResult<ApiResponse<bool>>> CreateRole(string role)
         {
             try
@@ -139,21 +146,6 @@ namespace EcommerceCustomerModule.Controllers
             {
                 throw e;
             }
-        }
-        [HttpGet]
-        [HttpPut]
-        
-        public void GetAllUsers() 
-        {
-            var cust = new Customer()
-            {
-                FirstName = "Ganesh"
-            };
-            //var rees = JsonConvert.SerializeObject(cust);
-            var res = System.Text.Json.JsonSerializer.Serialize(cust);
-
-            //var rees1 = JsonConvert.DeserializeObject<Customer>(rees);
-            var res1 = System.Text.Json.JsonSerializer.Deserialize<Customer>(res);
         }
     }
 }
