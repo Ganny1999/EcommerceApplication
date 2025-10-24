@@ -4,6 +4,6 @@
     {
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
-        public string Message { get; set; }
+        public string Jwt { get; set; }
     }
 }

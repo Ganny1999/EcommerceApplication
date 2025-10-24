@@ -5,6 +5,10 @@ using EcommerceCustomerModule.Models.Dtos;
 using EcommerceCustomerModule.Service.IService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace EcommerceCustomerModule.Service
 {
@@ -14,11 +18,13 @@ namespace EcommerceCustomerModule.Service
         private readonly UserManager<Customer> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        public CustomerService(AppDbContext context, UserManager<Customer> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+        private readonly IConfiguration _config;
+        public CustomerService(AppDbContext context, UserManager<Customer> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config, IMapper mapper)
         {
             _context = context;  
             _userManager = userManager;
             _roleManager = roleManager;
+            _config = config;
             _mapper= mapper;
         }
         public async Task<ApiResponse<CustomerResponseDTO>> RegisterCustomerAsync(CustomerRegistrationDTO customerRegistrationDTO)
@@ -86,11 +92,15 @@ namespace EcommerceCustomerModule.Service
                     var checkPassward = await _userManager.CheckPasswordAsync(isCustomerExixts, loginDTO.Password);
                     if (checkPassward == true)
                     {
+                        //var role = await _roleManager.GetRoleNameAsync(isCustomerExixts);
+                        var UserRoleID = await _context.UserRoles.FirstOrDefaultAsync(u=>u.UserId == isCustomerExixts.Id);
+                        var role = _context.Roles.FirstOrDefaultAsync(u => u.Id == UserRoleID.RoleId);
+
                         var loginResponseDto = new LoginResponseDTO()
                         {
                             CustomerId = isCustomerExixts.Id,
                             CustomerName = isCustomerExixts.FirstName + " " + isCustomerExixts.LastName,
-                            Message = "Login successful!"
+                            Jwt = GenerateToken(isCustomerExixts,role.Result.Name) // Generate Json Web Token
                         };
                         return new ApiResponse<LoginResponseDTO>(loginResponseDto, 200, "Login successful!", true);
                     }
@@ -220,7 +230,29 @@ namespace EcommerceCustomerModule.Service
             {
                 throw;
             }
-            
+        }
+        public string GenerateToken(Customer customer,string role)
+        {
+            var jwtSettings = _config.GetSection("Token");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:Key"]));
+            var signinCredential = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
+
+            var claimList = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email,customer.Email),
+                new Claim(ClaimTypes.Role,role)
+            };
+
+            var securityToken = new JwtSecurityToken(
+                claims: claimList,
+                signingCredentials: signinCredential,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                issuer: jwtSettings["Issuer"],
+                audience: jwtSettings["Audience"]
+                );
+
+            var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return token;
         }
     }
 }
